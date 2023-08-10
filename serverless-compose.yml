@@ -1,0 +1,9 @@
+services: 
+  api-service-stack:
+    path: ./api-service-stack
+  
+  core-service-stack: 
+    path: ./core-service-stack
+
+  notification-service-stack:
+    path: ./notification-service-stack

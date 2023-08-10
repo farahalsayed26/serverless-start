@@ -1,0 +1,14 @@
+Resources: 
+  MySNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: User Messages SNS
+      TopicName: users-${self:provider.stage}-topic
+
+Outputs:
+  MySNSTopicExport:
+    Description: The SNS topic export
+    Value: 
+      Ref: MySNSTopic
+    Export:
+      Name: MySNSTopicExport

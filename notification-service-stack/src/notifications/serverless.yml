@@ -1,0 +1,46 @@
+sendEmail:
+  handler: src/notifications/sendEmail/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+        - sqs:ReceiveMessage
+      Resource:
+        - Fn::GetAtt:
+          - UpdatedQueue
+          - Arn
+  environment:
+    QUEUE_URL:
+      Ref: UpdatedQueue
+  events: 
+    - sqs: 
+        arn: 
+          Fn::GetAtt: 
+            - UpdatedQueue
+            - Arn
+        batchSize: 10
+        maximumBatchingWindow: 60
+        functionResponseType: ReportBatchItemFailures
+
+sendSlack:
+  handler: src/notifications/sendSlack/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource:
+        - Fn::GetAtt:
+          - CreatedQueue
+          - Arn
+  environment:
+    QUEUE_URL:
+      Ref: CreatedQueue
+  events: 
+    - sqs: 
+        arn: 
+          Fn::GetAtt: 
+            - CreatedQueue
+            - Arn
+        batchSize: 10
+        maximumBatchingWindow: 60
+        functionResponseType: ReportBatchItemFailures

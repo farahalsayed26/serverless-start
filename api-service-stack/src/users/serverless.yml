@@ -1,0 +1,109 @@
+createUser:
+  handler: src/users/createUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminSetUserPassword
+        - cognito-idp:AdminInitiateAuth
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::GetAtt:
+          - CognitoUserPool
+          - Arn
+        - Fn::ImportValue: MySNSTopicExport
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    USER_POOL: 
+      Ref: CognitoUserPool
+    USER_POOL_CLIENT: 
+      Ref: CognitoUserPoolClient
+    SNS_TOPIC:
+      Fn::ImportValue: MySNSTopicExport
+  events:
+    - http:
+        method: post
+        path: /v1/users
+
+uploadProfilePhoto:
+  handler: src/users/uploadProfilePhoto/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        # - cognito-idp:AdminCreateUser
+        # - cognito-idp:AdminSetUserPassword
+        # - cognito-idp:AdminInitiateAuth
+      Resource:
+        - Fn::GetAtt:
+          - MyS3Bucket
+          - Arn
+        # - Fn::GetAtt:
+        #   - CognitoUserPool
+        #   - Arn
+  environment:
+    S3Bucket:
+      Ref: MyS3Bucket
+    # USER_POOL: 
+    #   Ref: CognitoUserPool
+    # USER_POOL_CLIENT: 
+    #   Ref: CognitoUserPoolClient
+  events:
+    - http:
+        method: put
+        path: /v1/upload/{email}
+
+updateUser:
+  handler: src/users/updateUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::ImportValue: MySNSTopicExport
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    SNS_TOPIC:
+      Fn::ImportValue: MySNSTopicExport
+  events:
+    - http:
+        method: put
+        path: /v1/users/{email} 
+        authorizer: 
+          authorizerId: 
+            Ref: CognitoAuthorizer
+          type: COGNITO_USER_POOLS
+
+getUser:
+  handler: src/users/getUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - s3:GetObject
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::GetAtt:
+          - MyS3Bucket
+          - Arn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    S3Bucket:
+      Ref: MyS3Bucket
+  events:
+    - http:
+        method: get
+        path: /v1/users/{email}

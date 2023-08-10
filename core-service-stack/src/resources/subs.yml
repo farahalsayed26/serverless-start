@@ -1,0 +1,28 @@
+Resources:
+  EmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: 
+        Fn::GetAtt:
+          - MySNSTopic
+          - TopicArn
+      Endpoint: 
+        'Fn::ImportValue': 'UpdatedQueueExport'
+      Protocol: sqs
+      FilterPolicy:
+        userStatus:
+          - updated
+  
+  SlackSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: 
+        Fn::GetAtt:
+          - MySNSTopic
+          - TopicArn
+      Endpoint: 
+        'Fn::ImportValue': 'CreatedQueueExport'
+      Protocol: sqs
+      FilterPolicy:
+        userStatus:
+          - created

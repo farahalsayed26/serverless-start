@@ -1,0 +1,25 @@
+Resources: 
+  MyS3Bucket: 
+    Type: AWS::S3::Bucket
+  # Properties: 
+    # PublicAccessBlockConfiguration:
+    #   BlockPublicAcls: false
+    #   BlockPublicPolicy: false
+    #   IgnorePublicAcls: false
+    #   RestrictPublicBuckets: false
+  
+  MyS3BucketPolicy: 
+    Type: AWS::S3::BucketPolicy
+    Properties: 
+      PolicyDocument: 
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: 
+              - s3:*
+            Resource: 
+              Fn::Sub:
+                - 'arn:aws:s3:::${MyS3Bucket}/*'
+                - MyS3Bucket: 
+                    Ref: MyS3Bucket
+      Bucket: "api-service-stack-dev-mys3bucket-1hf4k4f6zlhvw"

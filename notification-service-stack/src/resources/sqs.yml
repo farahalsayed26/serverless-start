@@ -1,0 +1,49 @@
+Resources: 
+  UpdatedQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: user-updated-${self:provider.stage}-queue
+  CreatedQueue: 
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: user-created-${self:provider.stage}-queue
+  
+  SQSQueuePolicy: 
+    Type: AWS::SQS::QueuePolicy
+    Properties: 
+      PolicyDocument: 
+        Id: SQSQueuePolicy
+        Statement: 
+        - Sid: Allow-sns-SendMessage
+          Effect: Allow
+          Principal: 
+            Service: sns.amazonaws.com
+          Action: 
+          - sqs:SendMessage
+          Resource: "*"
+          Condition: 
+            ArnEquals: 
+              aws:SourceArn:
+                - Fn::ImportValue: MySNSTopicExport
+      Queues: 
+      - Ref: UpdatedQueue
+      - Ref: CreatedQueue
+
+Outputs:
+  CreatedQueueExport:
+    Description: The created user SQS export
+    Value: 
+      Fn::GetAtt:
+          - CreatedQueue
+          - Arn
+    Export:
+      Name: CreatedQueueExport
+  
+  UpdatedQueueExport:
+    Description: The updated user SQS export
+    Value: 
+      Fn::GetAtt:
+          - UpdatedQueue
+          - Arn
+    Export:
+      Name: UpdatedQueueExport
