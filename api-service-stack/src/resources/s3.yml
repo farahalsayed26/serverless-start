@@ -22,4 +22,5 @@ Resources:
                 - 'arn:aws:s3:::${MyS3Bucket}/*'
                 - MyS3Bucket: 
                     Ref: MyS3Bucket
-      Bucket: "api-service-stack-dev-mys3bucket-1hf4k4f6zlhvw"
+      Bucket: 
+        Ref: MyS3Bucket

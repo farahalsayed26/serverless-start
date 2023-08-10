@@ -19,37 +19,6 @@ Resources:
       GenerateSecret: false
       AccessTokenValidity: 5
       IdTokenValidity: 5
-  
-  # CognitoAuthorizer:
-  #   Type: AWS::ApiGatewayV2::Authorizer
-  #   Properties:
-  #     ApiId: wduobu9q8j
-  #     Name: cognito-user-auth
-  #     AuthorizerType: JWT
-  #     JwtConfiguration:
-  #       Audience:
-  #         - Ref: CognitoUserPoolClient
-  #       Issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_i970RXr1t"
-  #     IdentitySource:
-  #       - $request.header.Authorization
-
-  # CognitoAuthorizer:
-  # Type: AWS::ApiGateway::Authorizer
-  # Properties:
-  #   RestApiId: app-id
-  #   Name: cognito-user-auth
-  #   Type: COGNITO_USER_POOLS
-  #   IdentitySource: $request.header.Authorization
-  #   ProviderARNs:
-  #     - Fn::Sub: "arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${CognitoUserPool}"
-  #   AuthType: JWT
-  #   AuthorizerCredentials: <optional-credentials-arn>
-  #   AuthorizerResultTtlInSeconds: 300
-  #   AuthorizerPayloadFormatVersion: "2.0"
-  #   JwtConfiguration:
-  #     Audience:
-  #       - Ref: CognitoUserPoolClient
-  #     Issuer: "https://cognito-idp.region.amazonaws.com/poolid"
 
   CognitoAuthorizer: 
     Type: AWS::ApiGateway::Authorizer
@@ -63,11 +32,6 @@ Resources:
         - Fn::GetAtt:
           - CognitoUserPool
           - Arn
-      # AuthType: JWT
-      # JwtConfiguration:
-      # Audience:
-      #   - Ref: CognitoUserPoolClient
-      # IssuerUrl: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_i970RXr1t"
       
 
 

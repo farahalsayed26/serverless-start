@@ -24,21 +24,6 @@ export default middyfy(async (event) => {
     const buffer = Buffer.from(imageData, 'base64');
     const fileInfo = await fileTypeFromBuffer(buffer);
 
-    //const encodedImage = Buffer.from(image, 'binary').toString('base64');
-    ///const encodedImage = Buffer.from(image, 'binary');
-    //console.log(encodedImage)
-    ///let imageBuffer = Buffer.from(image, 'base64');
-    ///let decodedImage = encodedImage.toString('base64')
-    //console.log(decodedImage)
-    //let decodedImage = image.split(",")[1];
-    ///console.log(decodedImage)
-
-    // if (image.substring(0, 7) === 'base64,') {
-    //     image = image.substring(7, image.length);
-    // }
-
-    
-    //const fileInfo = await fileType.fileTypeFromBuffer(imageBuffer);
     let detectedExt = 'jpg'
     let detectedMime = "image/jpeg";
 
@@ -55,33 +40,6 @@ export default middyfy(async (event) => {
         Body: buffer,
         ContentType: detectedMime
     })
-
-    // const upload = multer({
-    //     storage: multerS3({
-    //       s3: client,
-    //       bucket: process.env.S3Bucket!,
-    //       metadata: function (req, file, cb) {
-    //         cb(null, {fieldName: "TESTING_META_DATA"});
-    //       },
-    //       key: function (req, file, cb) {
-    //         cb(null, Date.now().toString())
-    //       }
-    //     })
-    //   })
-
-    //   const singleUpload = upload.single('image')
-
-    //   router.post('/image-upload', function(req, res) {
-
-    //     singleUpload(req, res, function(err) {
-      
-    //       if (err) {
-    //         return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}] });
-    //       }
-      
-    //       return res.json({'imageUrl': req.file.location});
-    //     });
-    //   });
 
     const response = await client.send(command);
 
